@@ -6,6 +6,18 @@ document.getElementById('writeTextButton').onclick = function() {
     document.getElementById('textInputOverlay').style.display = 'flex';
 };
 
+document.getElementById('cancelTextBtn').onclick = function() {
+    document.getElementById('textInputOverlay').style.display = 'none';
+};
+
+document.getElementById('sendTextBtn').onclick = function() {
+    document.getElementById('textInputOverlay').style.display = 'none';
+    uploadText(document.getElementById("feedbackTxt").value);
+};
+document.getElementById('continueBtn').addEventListener('click', function() {
+    document.getElementById('thankYouOverlay').style.display = 'none';
+});
+
 document.getElementById('cameraInput').onchange = function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -26,6 +38,23 @@ document.getElementById('audioInput').onchange = function(event) {
     }
 };
 
+function uploadText(text){
+    const formData = new FormData();
+    ***formData.append('text_content', text);
+
+    fetch('api/upload_text.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Erfolg:', data);
+        })
+        .catch((error) => {
+            console.error('Fehler:', error);
+        });
+    document.getElementById('thankYouOverlay').style.display = 'flex';
+}
 
 function uploadPhoto(file) {
     const formData = new FormData();
@@ -44,10 +73,6 @@ function uploadPhoto(file) {
         });
     document.getElementById('thankYouOverlay').style.display = 'flex';
 }
-
-document.getElementById('continueBtn').addEventListener('click', function() {
-    document.getElementById('thankYouOverlay').style.display = 'none';
-});
 
 function uploadAudio(file) {
     const formData = new FormData();

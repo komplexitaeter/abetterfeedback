@@ -2,6 +2,10 @@ document.getElementById('takePhotoButton').onclick = function() {
     document.getElementById('cameraInput').click();
 };
 
+document.getElementById('writeTextButton').onclick = function() {
+    document.getElementById('textInputOverlay').style.display = 'flex';
+};
+
 document.getElementById('cameraInput').onchange = function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -38,7 +42,12 @@ function uploadPhoto(file) {
         .catch((error) => {
             console.error('Fehler:', error);
         });
+    document.getElementById('thankYouOverlay').style.display = 'flex';
 }
+
+document.getElementById('continueBtn').addEventListener('click', function() {
+    document.getElementById('thankYouOverlay').style.display = 'none';
+});
 
 function uploadAudio(file) {
     const formData = new FormData();

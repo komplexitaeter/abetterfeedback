@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ca6f1130-1ca9-4ba9-89d2-2f8758f1759b" name="abetterfeedback" url="http://localhost">
+        <fileTransfer mountedRoot="C:\xampp\htdocs\abetterfeedback" accessType="MOUNT" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>

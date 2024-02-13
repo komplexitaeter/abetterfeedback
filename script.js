@@ -40,7 +40,7 @@ document.getElementById('audioInput').onchange = function(event) {
 
 function uploadText(text){
     const formData = new FormData();
-    ***formData.append('text_content', text);
+    formData.append('text_content', text);
 
     fetch('api/upload_text.php', {
         method: 'POST',

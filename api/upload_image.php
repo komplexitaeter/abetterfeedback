@@ -9,6 +9,10 @@ $username = _MYSQL_USER;
 $password = _MYSQL_PWD;
 $port = _MYSQL_PORT;
 
+$mime_type = substr( filter_input(INPUT_GET, "mime_type", FILTER_SANITIZE_STRING	) ,0,100);
+$mime_type = substr( filter_input(INPUT_GET, "file_name", FILTER_SANITIZE_STRING	) ,0,200);
+
+
 // Verbindung zur Datenbank herstellen
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=$port", $username, $password);
@@ -25,10 +29,12 @@ try {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['photo']['tmp_name'])) {
     $image = file_get_contents($_FILES['photo']['tmp_name']);
 
-    $sql = "INSERT INTO abf_image_tbl (image) VALUES (:image)";
+    $sql = "INSERT INTO abf_feedback_tbl (image_conent, file_name, mime_type) VALUES (:image, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
 
     $stmt->bindParam(':image', $image, PDO::PARAM_LOB);
+    $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
+    $stmt->bindParam(':file_name', $mime_type, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
         // Erfolgreiche Antwort

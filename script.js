@@ -60,19 +60,27 @@ function uploadPhoto(file) {
     const formData = new FormData();
     formData.append('photo', file);
 
-    fetch('api/upload_image.php', {
+    // MIME-Typ und Dateiname der Datei abrufen
+    const mimeType = file.type;
+    const fileName = file.name;
+
+    // URL mit MIME-Typ und Dateiname als GET-Parameter zusammenbauen
+    const url = `api/upload_image.php?mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
+
+    fetch(url, {
         method: 'POST',
         body: formData
     })
         .then(response => response.json())
         .then(data => {
             console.log('Erfolg:', data);
+            document.getElementById('thankYouOverlay').style.display = 'flex'; // Overlay anzeigen nach Erfolg
         })
         .catch((error) => {
             console.error('Fehler:', error);
         });
-    document.getElementById('thankYouOverlay').style.display = 'flex';
 }
+
 
 function uploadAudio(file) {
     const formData = new FormData();

@@ -1,14 +1,17 @@
 <?php
 header('Content-Type: application/json'); // Setzt den Content-Type der Antwort
 
-$host = 'localhost'; // z.B. localhost
-$dbname = 'abetterfeedback';
-$username = 'root';
-$password = 'root';
+include '../config.php';
+
+$host = _MYSQL_HOST; // z.B. localhost
+$dbname = _MYSQL_DB;
+$username = _MYSQL_USER;
+$password = _MYSQL_PWD;
+$port = _MYSQL_PORT;
 
 // Verbindung zur Datenbank herstellen
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=$port", $username, $password);
     // Set the PDO error mode to exception
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {

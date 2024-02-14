@@ -4,6 +4,9 @@ document.getElementById('takePhotoButton').onclick = function() {
 
 document.getElementById('writeTextButton').onclick = function() {
     document.getElementById('textInputOverlay').style.display = 'flex';
+    const feedbackTxtArea = document.getElementById("feedbackTxt");
+    feedbackTxtArea.focus();
+    feedbackTxtArea.select();
 };
 
 document.getElementById('cancelTextBtn').onclick = function() {

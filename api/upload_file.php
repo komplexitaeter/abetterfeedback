@@ -27,22 +27,22 @@ try {
 
 // Prüfen, ob eine Datei hochgeladen wurde
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['photo']['tmp_name'])) {
-    $image = file_get_contents($_FILES['photo']['tmp_name']);
+    $file = file_get_contents($_FILES['photo']['tmp_name']);
 
-    $sql = "INSERT INTO abf_feedback_tbl (binary_content, file_name, mime_type) VALUES (:image, :file_name, :mime_type)";
+    $sql = "INSERT INTO abf_feedback_tbl (binary_content, file_name, mime_type) VALUES (:file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
 
-    $stmt->bindParam(':image', $image, PDO::PARAM_LOB);
+    $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
     $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
     $stmt->bindParam(':mime_type', $mime_type, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
         // Erfolgreiche Antwort
-        echo json_encode(['message' => 'Bild erfolgreich gespeichert.']);
+        echo json_encode(['message' => 'Datei erfolgreich gespeichert.']);
     } else {
         // Sendet einen HTTP-Statuscode 500 zurück
         http_response_code(500);
-        echo json_encode(['error' => 'Fehler beim Speichern des Bildes.']);
+        echo json_encode(['error' => 'Fehler beim Speichern der Datei.']);
     }
 } else {
     // Sendet einen HTTP-Statuscode 400 zurück

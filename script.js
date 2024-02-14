@@ -22,7 +22,7 @@ document.getElementById('cameraInput').onchange = function(event) {
     const file = event.target.files[0];
     if (file) {
         // Hier können Sie das Foto per API an Ihren Server senden.
-        uploadPhoto(file);
+        uploadFile(file);
     }
 };
 
@@ -34,7 +34,7 @@ document.getElementById('audioInput').onchange = function(event) {
     const file = event.target.files[0];
     if (file) {
         // Hier können Sie die Audiodatei per API an Ihren Server senden.
-        uploadAudio(file);
+        uploadFile(file);
     }
 };
 
@@ -56,7 +56,7 @@ function uploadText(text){
     document.getElementById('thankYouOverlay').style.display = 'flex';
 }
 
-function uploadPhoto(file) {
+function uploadFile(file) {
     const formData = new FormData();
     formData.append('photo', file);
 
@@ -65,7 +65,7 @@ function uploadPhoto(file) {
     const fileName = file.name;
 
     // URL mit MIME-Typ und Dateiname als GET-Parameter zusammenbauen
-    const url = `api/upload_image.php?mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
+    const url = `api/upload_file.php?mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
 
     fetch(url, {
         method: 'POST',
@@ -75,24 +75,6 @@ function uploadPhoto(file) {
         .then(data => {
             console.log('Erfolg:', data);
             document.getElementById('thankYouOverlay').style.display = 'flex'; // Overlay anzeigen nach Erfolg
-        })
-        .catch((error) => {
-            console.error('Fehler:', error);
-        });
-}
-
-
-function uploadAudio(file) {
-    const formData = new FormData();
-    formData.append('audio', file);
-
-    fetch('api/upload_audio.php', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Erfolg:', data);
         })
         .catch((error) => {
             console.error('Fehler:', error);

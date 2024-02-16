@@ -9,6 +9,16 @@ document.getElementById('writeTextButton').onclick = function() {
     feedbackTxtArea.select();
 };
 
+/*
+window.addEventListener('resize', () => {
+    // For the rare legacy browsers that don't support it
+    if (!window.visualViewport) {
+        return
+    }
+    document.getElementById("feedbackTxt").style.height=Math.floor(0.7*visualViewport.height)+"px";
+    console.log(document.getElementById("feedbackTxt").style.height);
+})
+*/
 document.getElementById('cancelTextBtn').onclick = function() {
     document.getElementById('textInputOverlay').style.display = 'none';
 };

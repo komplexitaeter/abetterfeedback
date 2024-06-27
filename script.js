@@ -55,7 +55,7 @@ function uploadText(text) {
     const formData = new FormData();
     formData.append('text_content', text);
 
-    fetch('api/upload_text.php?context=' + getContext(), {
+    fetch('api/upload_file.php?context=' + getContext(), {
         method: 'POST',
         body: formData
     })

@@ -6,35 +6,27 @@
     <script src="script.js" async></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+<h1>Teile deine Gedanken mit uns!</h1>
+<div id="info-txt">Dein Feedback fließt direkt in unsere Arbeit ein. Ob Text, Foto oder Audio - wir freuen uns auf deine Rückmeldung.</div>
 
+<input type="file" accept="image/*" capture="camera" id="cameraInput" hidden>
+<input type="file" accept="audio/*" capture="microphone" id="audioInput" hidden>
+<button class="modern-btn" id="takePhotoButton"><i class="fas fa-camera"></i> Foto machen</button>
+<button class="modern-btn" id="recordAudioButton"><i class="fas fa-upload"></i> Audiokommentar aufnehmen</button>
+<button class="modern-btn" id="writeTextButton"><i class="fas fa-check"></i> Text schreiben</button>
 
-    <h1>Teile deine Gedanken mit uns!</h1>
-    <div id="info-txt">Dein Feedback fließt direkt in unsere Arbeit ein. Ob Text, Foto oder Audio - wir freuen uns auf deine Rückmeldung.</div>
+<div id="textInputOverlay" class="overlay">
+    <label for="feedbackTxt"></label>
+    <textarea id="feedbackTxt" class="feedback-text">...</textarea>
+    <button class="modern-btn" id="sendTextBtn"><i class="fas fa-check"></i>Senden</button>
+    <button class="modern-btn" id="cancelTextBtn"><i class="fas fa-ban"></i>Abbrechen</button>
+</div>
 
-    <input type="file" accept="image/*" capture="camera" id="cameraInput" hidden>
-    <input type="file" accept="audio/*" capture="microphone" id="audioInput" hidden>
-    <button class="modern-btn" id="takePhotoButton"><i class="fas fa-camera"></i> Foto machen</button>
-    <button class="modern-btn" id="recordAudioButton"><i class="fas fa-upload"></i> Audiokommentar aufnehmen</button>
-    <button class="modern-btn" id="writeTextButton"><i class="fas fa-check"></i> Text schreiben</button>
-
-
-    <div id="textInputOverlay" class="overlay">
-
-        <label for="feedbackTxt"></label><textarea id="feedbackTxt" class="feedback-text">...</textarea>
-        <button class="modern-btn" id="sendTextBtn"><i class="fas fa-check"></i>Senden</button>
-        <button class="modern-btn" id="cancelTextBtn"><i class="fas fa-ban"></i>Abbrechen</button>
-
-    </div>
-
-
-    <div id="thankYouOverlay" class="overlay">
-            <button class="modern-btn" id="continueBtn">Danke für deinen Input! <br /><br />Weitermachen? Klicke hier!</button>
-    </div>
-
-
+<div id="thankYouOverlay" class="overlay">
+    <button class="modern-btn" id="continueBtn">Danke für deinen Input! <br /><br />Weitermachen? Klicke hier!</button>
+</div>
 </body>
 </html>
-
-

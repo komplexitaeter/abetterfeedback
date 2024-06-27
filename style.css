@@ -7,17 +7,30 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-size: 1.2rem; /* Grundlegende Schriftgröße für den Körpertext */
+    text-align: center; /* Zentrieren des Texts */
+}
+
+h1 {
+    font-size: 2rem; /* Größere Schriftgröße für Überschriften */
+    margin-bottom: 1rem;
+}
+
+#info-txt {
+    width: 80%;
+    margin-bottom: 20px;
+    font-size: 1.5rem; /* Anpassung der Schriftgröße für Info-Text */
 }
 
 .modern-btn {
     background-color: #4CAF50; /* Grüner Hintergrund */
     border: none;
     color: white; /* Weiße Textfarbe */
-    padding: 20px; /* Polsterung */
+    padding: 1.5rem; /* Polsterung */
     text-align: center;
     text-decoration: none;
     display: block;
-    font-size: 2.5rem;
+    font-size: 1.5rem; /* Anpassung der Schriftgröße */
     margin: 10px; /* Geringer Rand um jeden Button */
     width: 85%; /* Button-Breite relativ zum Bildschirm */
     min-height: 15%;
@@ -35,36 +48,55 @@ body, html {
     background-color: #45a049; /* Dunklerer Hintergrund beim Überfahren */
 }
 
-/* Stellen Sie sicher, dass die Buttons zusammen fast den gesamten Bildschirm ausfüllen */
 @media (max-width: 600px) {
+    body, html {
+        font-size: 1.5rem; /* Größere Grundschriftgröße für kleine Bildschirme */
+    }
+
+    h1 {
+        font-size: 2.5rem; /* Größere Schriftgröße für Überschriften auf kleinen Bildschirmen */
+    }
+
+    #info-txt {
+        font-size: 1.8rem; /* Größere Schriftgröße für Info-Text auf kleinen Bildschirmen */
+    }
+
     .modern-btn {
-        font-size: 20px; /* Größere Schrift auf kleinen Bildschirmen */
-        padding: 12% 20px; /* Anpassung der Polsterung für vertikale Ausdehnung */
+        font-size: 1.8rem; /* Größere Schriftgröße für Buttons auf kleinen Bildschirmen */
+        padding: 1.5rem; /* Anpassung der Polsterung für vertikale Ausdehnung */
+    }
+
+    .feedback-text {
+        font-size: 2rem; /* Größere Schriftgröße für Textarea auf kleinen Bildschirmen */
+    }
+
+    .overlay {
+        font-size: 2rem; /* Größere Schriftgröße für Overlay auf kleinen Bildschirmen */
     }
 }
 
-#textInputOverlay{
+#textInputOverlay {
     display: none;
-    font-size: 2.5rem;
 }
 
-#textInputOverlay .modern-btn{
+#textInputOverlay .modern-btn {
     width: 40%;
     min-height: 0;
 }
 
-#cancelTextBtn{
+#cancelTextBtn {
     background-color: darkgrey;
 }
 
-#thankYouOverlay{
+#thankYouOverlay {
     display: none;
-    font-size: 2.5rem;
 }
 
 .overlay {
+    display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -76,21 +108,16 @@ body, html {
     background-color: rgba(0,0,0,0.9);
     z-index: 2;
     cursor: pointer;
-    text-align: center;
     color: white;
+    padding: 2rem; /* Polsterung für besseren Abstand */
 }
 
-.feedback-text{
+.feedback-text {
     width: 90%;
     height: 35%;
     font-size: 2.5rem;
     border-radius: 3rem;
     padding: 1rem;
     margin-bottom: 2rem;
-    margin-top:2rem;
-}
-
-#info-txt {
-    width: 80%;
-    margin-bottom: 20px;
+    margin-top: 2rem;
 }

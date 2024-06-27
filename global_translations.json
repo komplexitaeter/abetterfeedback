@@ -1,0 +1,100 @@
+[{
+  "id": "info-header",
+  "en": {
+    "text": "Share your thoughts with us!"
+  },
+  "de": {
+    "text": "Teile deine Gedanken mit uns!"
+  }
+},
+  {
+    "id": "info-txt",
+    "en": {
+      "text": "Your feedback directly influences our work. Whether text, photo, or audio - we look forward to your feedback."
+    },
+    "de": {
+      "text": "Dein Feedback fließt direkt in unsere Arbeit ein. Ob Text, Foto oder Audio - wir freuen uns auf deine Rückmeldung."
+    }
+  },
+  {
+  "id": "takePhotoButton",
+  "en": {
+    "innerHTML": "<i class=\"fas fa-camera\"></i> Take Photo"
+  },
+  "de": {
+    "innerHTML": "<i class=\"fas fa-camera\"></i> Foto machen"
+  }
+},
+  {
+    "id": "recordAudioButton",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-microphone\"></i> Record Audio Comment"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-microphone\"></i> Audiokommentar aufnehmen"
+    }
+  },
+  {
+    "id": "writeTextButton",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-pencil-alt\"></i> Write Text"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-pencil-alt\"></i> Text schreiben"
+    }
+  },
+  {
+    "id": "sendTextBtn",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-check\"></i> Send"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-check\"></i>Senden"
+    }
+  },
+  {
+    "id": "cancelTextBtn",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-ban\"></i> Cancel"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-ban\"></i>Abbrechen"
+    }
+  },
+  {
+    "id": "continueBtn",
+    "en": {
+      "text": "Thank you for your input! Continue?"
+    },
+    "de": {
+      "text": "Danke für deinen Input! Weitermachen?"
+    }
+  },
+  {
+    "id": "imprint_link",
+    "en": {
+      "text": "Imprint"
+    },
+    "de": {
+      "text": "Impressum"
+    }
+  },
+  {
+    "id": "privacy_link",
+    "en": {
+      "text": "Privacy"
+    },
+    "de": {
+      "text": "Datenschutz"
+    }
+  },
+  {
+    "id": "api_error_msg",
+    "en": {
+      "value": "Oops. Something went 'technically' wrong. This annoys us. Please escalate to hallo@komplexitaeter.de and we will take care of it."
+    },
+    "de": {
+      "value": "Ups. Da ist wohl etwas 'technisch' schief gegangen. Das ärgert uns. Bitte an hallo@komplexitaeter.de eskalieren und wir kümmern uns."
+    }
+  }
+]

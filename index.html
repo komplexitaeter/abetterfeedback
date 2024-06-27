@@ -14,30 +14,30 @@
 </header>
 
 <main>
-    <h1>Teile deine Gedanken mit uns!</h1>
+    <h1 id="info-header">Teile deine Gedanken mit uns!</h1>
     <div id="info-txt">Dein Feedback fließt direkt in unsere Arbeit ein. Ob Text, Foto oder Audio - wir freuen uns auf deine Rückmeldung.</div>
 
     <input type="file" accept="image/*" capture="camera" id="cameraInput" hidden>
     <input type="file" accept="audio/*" capture="microphone" id="audioInput" hidden>
-    <button class="modern-btn" id="takePhotoButton"><i class="fas fa-camera"></i> Foto machen</button>
-    <button class="modern-btn" id="recordAudioButton"><i class="fas fa-microphone"></i> Audiokommentar aufnehmen</button>
-    <button class="modern-btn" id="writeTextButton"><i class="fas fa-pencil-alt"></i> Text schreiben</button>
+    <button class="modern-btn" id="takePhotoButton"></button>
+    <button class="modern-btn" id="recordAudioButton"></button>
+    <button class="modern-btn" id="writeTextButton"></button>
 </main>
 
 <div id="textInputOverlay" class="overlay">
     <label for="feedbackTxt"></label>
     <textarea id="feedbackTxt" class="feedback-text">...</textarea>
-    <button class="modern-btn" id="sendTextBtn"><i class="fas fa-check"></i>Senden</button>
-    <button class="modern-btn" id="cancelTextBtn"><i class="fas fa-ban"></i>Abbrechen</button>
+    <button class="modern-btn" id="sendTextBtn"></button>
+    <button class="modern-btn" id="cancelTextBtn"></button>
 </div>
 
 <div id="thankYouOverlay" class="overlay">
-    <button class="thank-you-btn" id="continueBtn">Danke für deinen Input! Weitermachen?</button>
+    <button class="thank-you-btn" id="continueBtn"></button>
 </div>
 
 <footer>
-    <a href="https://www.komplexitaeter.de/impressum">Impressum</a> |
-    <a href="https://www.komplexitaeter.de/datenschutz">Datenschutz</a>
+    <a id="imprint_link" href="https://www.komplexitaeter.de/impressum"></a> |
+    <a id="privacy_link" href="https://www.komplexitaeter.de/datenschutz"></a>
 </footer>
 
 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
@@ -46,6 +46,7 @@
     </div>
 </div>
 
+<input id="api_error_msg" type="hidden" />
 
 </body>
 </html>

@@ -55,7 +55,7 @@ function uploadText(text){
     const formData = new FormData();
     formData.append('text_content', text);
 
-    fetch('api/upload_text.php', {
+    fetch('api/upload_text.php?context='+getContext(), {
         method: 'POST',
         body: formData
     })
@@ -78,7 +78,7 @@ function uploadFile(file) {
     const fileName = file.name;
 
     // URL mit MIME-Typ und Dateiname als GET-Parameter zusammenbauen
-    const url = `api/upload_file.php?mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
+    const url = `api/upload_file.php?context=${getContext()}&mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
 
     fetch(url, {
         method: 'POST',
@@ -92,4 +92,8 @@ function uploadFile(file) {
         .catch((error) => {
             console.error('Fehler:', error);
         });
+}
+
+function getContext() {
+    return new URLSearchParams( new URL(window.location.href).search).get('context');
 }

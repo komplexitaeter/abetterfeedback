@@ -3,7 +3,7 @@ header('Content-Type: application/json'); // Setzt den Content-Type der Antwort
 
 include '../config.php';
 
-$host = _MYSQL_HOST; // z.B. localhost
+$host = _MYSQL_HOST;
 $dbname = _MYSQL_DB;
 $username = _MYSQL_USER;
 $password = _MYSQL_PWD;

@@ -33,7 +33,8 @@ h1 {
     font-size: 1rem; /* Anpassung der Schriftgröße */
     margin: 0.5rem; /* Geringer Rand um jeden Button */
     width: 90%; /* Button-Breite relativ zum Bildschirm */
-    height: 3rem;
+    max-width: 600px;
+    height: 6rem;
     transition: all 0.3s;
     cursor: pointer;
     border-radius: 1rem; /* Abgerundete Ecken */
@@ -64,7 +65,6 @@ h1 {
     .modern-btn {
         font-size: 1rem; /* Schriftgröße für Buttons auf kleinen Bildschirmen */
         padding: 0.8rem; /* Anpassung der Polsterung für vertikale Ausdehnung */
-        height: 2.5rem;
     }
 
     .feedback-text {

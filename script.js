@@ -55,7 +55,7 @@ function uploadText(text) {
     const formData = new FormData();
     formData.append('text_content', text);
 
-    fetch('api/upload_file.php?context=' + getContext(), {
+    fetch('api/upload_feedback.php?context=' + getContext(), {
         method: 'POST',
         body: formData
     })
@@ -85,7 +85,7 @@ function uploadFile(file, fileType) {
     const mimeType = file.type;
     const fileName = file.name;
 
-    const url = `api/upload_file.php?context=${getContext()}&mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
+    const url = `api/upload_feedback.php?context=${getContext()}&mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
 
     fetch(url, {
         method: 'POST',

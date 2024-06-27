@@ -7,23 +7,66 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-family: 'Arial', sans-serif; /* Angepasste Schriftart */
+    background-color: #f9f9f9; /* Hellgrauer Hintergrund */
+    color: #333; /* Dunkelgraue Textfarbe */
     font-size: 1rem; /* Basis-Schriftgröße */
     text-align: center;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    padding: 0.3rem 0; /* Reduziertes Padding */
+}
+
+.logo {
+    max-height: 40px; /* Logo-Höhe anpassen */
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    position: absolute;
+    bottom: 0;
+    background-color: #f9f9f9;
+}
+
+footer a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {
     font-size: 1.5rem; /* Anpassung der Schriftgröße für Überschriften */
     margin-bottom: 0.5rem;
+    margin-top: 0; /* Reduziertes Margin oben */
+    font-weight: bold;
 }
 
 #info-txt {
     width: 90%;
     margin-bottom: 1rem;
     font-size: 1rem; /* Anpassung der Schriftgröße für Info-Text */
+    line-height: 1.5;
 }
 
 .modern-btn {
-    background-color: #4CAF50; /* Grüner Hintergrund */
+    background-color: #ff4081; /* Angepasste Hintergrundfarbe (Rosa) */
     border: none;
     color: white; /* Weiße Textfarbe */
     padding: 1rem; /* Polsterung */
@@ -38,7 +81,8 @@ h1 {
     transition: all 0.3s;
     cursor: pointer;
     border-radius: 1rem; /* Abgerundete Ecken */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Schatten für Tiefe */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
+    font-weight: bold; /* Fettere Schrift */
 }
 
 .modern-btn i {
@@ -46,7 +90,7 @@ h1 {
 }
 
 .modern-btn:hover {
-    background-color: #45a049; /* Dunklerer Hintergrund beim Überfahren */
+    background-color: #e91e63; /* Dunklerer Hintergrund beim Überfahren (Dunkelrosa) */
 }
 
 @media (max-width: 600px) {
@@ -106,11 +150,12 @@ h1 {
     right: 0;
     bottom: 0;
     margin: 0;
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(0, 0, 0, 0.9);
     z-index: 2;
     cursor: pointer;
     color: white;
     padding: 1rem; /* Polsterung für besseren Abstand */
+    font-family: 'Arial', sans-serif; /* Angepasste Schriftart */
 }
 
 .feedback-text {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Komplexitäter.de - Give us Feedback</title>
@@ -9,14 +9,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<h1>Teile deine Gedanken mit uns!</h1>
-<div id="info-txt">Dein Feedback fließt direkt in unsere Arbeit ein. Ob Text, Foto oder Audio - wir freuen uns auf deine Rückmeldung.</div>
+<header>
+    <a href="https://www.komplexitaeter.de"><img src="src/logo_big.webp" alt="Komplexitäter Logo" class="logo"></a>
+</header>
 
-<input type="file" accept="image/*" capture="camera" id="cameraInput" hidden>
-<input type="file" accept="audio/*" capture="microphone" id="audioInput" hidden>
-<button class="modern-btn" id="takePhotoButton"><i class="fas fa-camera"></i> Foto machen</button>
-<button class="modern-btn" id="recordAudioButton"><i class="fas fa-upload"></i> Audiokommentar aufnehmen</button>
-<button class="modern-btn" id="writeTextButton"><i class="fas fa-check"></i> Text schreiben</button>
+<main>
+    <h1>Teile deine Gedanken mit uns!</h1>
+    <div id="info-txt">Dein Feedback fließt direkt in unsere Arbeit ein. Ob Text, Foto oder Audio - wir freuen uns auf deine Rückmeldung.</div>
+
+    <input type="file" accept="image/*" capture="camera" id="cameraInput" hidden>
+    <input type="file" accept="audio/*" capture="microphone" id="audioInput" hidden>
+    <button class="modern-btn" id="takePhotoButton"><i class="fas fa-camera"></i> Foto machen</button>
+    <button class="modern-btn" id="recordAudioButton"><i class="fas fa-upload"></i> Audiokommentar aufnehmen</button>
+    <button class="modern-btn" id="writeTextButton"><i class="fas fa-check"></i> Text schreiben</button>
+</main>
 
 <div id="textInputOverlay" class="overlay">
     <label for="feedbackTxt"></label>
@@ -26,7 +32,12 @@
 </div>
 
 <div id="thankYouOverlay" class="overlay">
-    <button class="modern-btn" id="continueBtn">Danke für deinen Input! <br /><br />Weitermachen? Klicke hier!</button>
+    <button class="modern-btn" id="continueBtn">Danke für deinen Input! Weitermachen?</button>
 </div>
+
+<footer>
+    <a href="https://www.komplexitaeter.de/impressum">Impressum</a> |
+    <a href="https://www.komplexitaeter.de/datenschutz">Datenschutz</a>
+</footer>
 </body>
 </html>

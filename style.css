@@ -7,41 +7,41 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem; /* Grundlegende Schriftgröße für den Körpertext */
-    text-align: center; /* Zentrieren des Texts */
+    font-size: 1rem; /* Basis-Schriftgröße */
+    text-align: center;
 }
 
 h1 {
-    font-size: 2rem; /* Größere Schriftgröße für Überschriften */
-    margin-bottom: 1rem;
+    font-size: 1.5rem; /* Anpassung der Schriftgröße für Überschriften */
+    margin-bottom: 0.5rem;
 }
 
 #info-txt {
-    width: 80%;
-    margin-bottom: 20px;
-    font-size: 1.5rem; /* Anpassung der Schriftgröße für Info-Text */
+    width: 90%;
+    margin-bottom: 1rem;
+    font-size: 1rem; /* Anpassung der Schriftgröße für Info-Text */
 }
 
 .modern-btn {
     background-color: #4CAF50; /* Grüner Hintergrund */
     border: none;
     color: white; /* Weiße Textfarbe */
-    padding: 1.5rem; /* Polsterung */
+    padding: 1rem; /* Polsterung */
     text-align: center;
     text-decoration: none;
     display: block;
-    font-size: 1.5rem; /* Anpassung der Schriftgröße */
-    margin: 10px; /* Geringer Rand um jeden Button */
-    width: 85%; /* Button-Breite relativ zum Bildschirm */
-    min-height: 15%;
+    font-size: 1rem; /* Anpassung der Schriftgröße */
+    margin: 0.5rem; /* Geringer Rand um jeden Button */
+    width: 90%; /* Button-Breite relativ zum Bildschirm */
+    height: 3rem;
     transition: all 0.3s;
     cursor: pointer;
-    border-radius: 1.5rem; /* Abgerundete Ecken */
+    border-radius: 1rem; /* Abgerundete Ecken */
     box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Schatten für Tiefe */
 }
 
 .modern-btn i {
-    margin-right: 8px; /* Abstand zwischen Icon und Text */
+    margin-right: 0.5rem; /* Abstand zwischen Icon und Text */
 }
 
 .modern-btn:hover {
@@ -50,28 +50,29 @@ h1 {
 
 @media (max-width: 600px) {
     body, html {
-        font-size: 1.5rem; /* Größere Grundschriftgröße für kleine Bildschirme */
+        font-size: 1rem; /* Grundschriftgröße für kleine Bildschirme */
     }
 
     h1 {
-        font-size: 2.5rem; /* Größere Schriftgröße für Überschriften auf kleinen Bildschirmen */
+        font-size: 1.2rem; /* Schriftgröße für Überschriften auf kleinen Bildschirmen */
     }
 
     #info-txt {
-        font-size: 1.8rem; /* Größere Schriftgröße für Info-Text auf kleinen Bildschirmen */
+        font-size: 1rem; /* Schriftgröße für Info-Text auf kleinen Bildschirmen */
     }
 
     .modern-btn {
-        font-size: 1.8rem; /* Größere Schriftgröße für Buttons auf kleinen Bildschirmen */
-        padding: 1.5rem; /* Anpassung der Polsterung für vertikale Ausdehnung */
+        font-size: 1rem; /* Schriftgröße für Buttons auf kleinen Bildschirmen */
+        padding: 0.8rem; /* Anpassung der Polsterung für vertikale Ausdehnung */
+        height: 2.5rem;
     }
 
     .feedback-text {
-        font-size: 2rem; /* Größere Schriftgröße für Textarea auf kleinen Bildschirmen */
+        font-size: 1rem; /* Schriftgröße für Textarea auf kleinen Bildschirmen */
     }
 
     .overlay {
-        font-size: 2rem; /* Größere Schriftgröße für Overlay auf kleinen Bildschirmen */
+        font-size: 1rem; /* Schriftgröße für Overlay auf kleinen Bildschirmen */
     }
 }
 
@@ -109,15 +110,15 @@ h1 {
     z-index: 2;
     cursor: pointer;
     color: white;
-    padding: 2rem; /* Polsterung für besseren Abstand */
+    padding: 1rem; /* Polsterung für besseren Abstand */
 }
 
 .feedback-text {
     width: 90%;
     height: 35%;
-    font-size: 2.5rem;
-    border-radius: 3rem;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }

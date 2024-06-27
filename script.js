@@ -1,3 +1,7 @@
+const gLang = getBrowserLanguage();
+
+console.log(gLang);
+
 document.getElementById('takePhotoButton').onclick = function() {
     document.getElementById('cameraInput').click();
 };
@@ -9,24 +13,16 @@ document.getElementById('writeTextButton').onclick = function() {
     feedbackTxtArea.select();
 };
 
-/*
-window.addEventListener('resize', () => {
-    // For the rare legacy browsers that don't support it
-    if (!window.visualViewport) {
-        return
-    }
-    document.getElementById("feedbackTxt").style.height=Math.floor(0.7*visualViewport.height)+"px";
-    console.log(document.getElementById("feedbackTxt").style.height);
-})
-*/
 document.getElementById('cancelTextBtn').onclick = function() {
     document.getElementById('textInputOverlay').style.display = 'none';
 };
 
 document.getElementById('sendTextBtn').onclick = function() {
     document.getElementById('textInputOverlay').style.display = 'none';
+    showSpinner();
     uploadText(document.getElementById("feedbackTxt").value);
 };
+
 document.getElementById('continueBtn').addEventListener('click', function() {
     document.getElementById('thankYouOverlay').style.display = 'none';
 });
@@ -34,8 +30,9 @@ document.getElementById('continueBtn').addEventListener('click', function() {
 document.getElementById('cameraInput').onchange = function(event) {
     const file = event.target.files[0];
     if (file) {
-        // Hier können Sie das Foto per API an Ihren Server senden.
-        uploadFile(file);
+        showSpinner();
+        uploadFile(file, 'photo');
+        document.getElementById('cameraInput').value = "";  // Reset the input value
     }
 };
 
@@ -46,54 +43,83 @@ document.getElementById('recordAudioButton').onclick = function() {
 document.getElementById('audioInput').onchange = function(event) {
     const file = event.target.files[0];
     if (file) {
-        // Hier können Sie die Audiodatei per API an Ihren Server senden.
-        uploadFile(file);
+        showSpinner();
+        uploadFile(file, 'audio');
+        document.getElementById('audioInput').value = "";  // Reset the input value
     }
 };
 
-function uploadText(text){
+function uploadText(text) {
     const formData = new FormData();
     formData.append('text_content', text);
 
-    fetch('api/upload_text.php?context='+getContext(), {
+    fetch('api/upload_text.php?context=' + getContext(), {
         method: 'POST',
         body: formData
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Erfolg:', data);
+            document.getElementById('thankYouOverlay').style.display = 'flex';
         })
         .catch((error) => {
             console.error('Fehler:', error);
+            alert('Ein Fehler ist aufgetreten: ' + error.message);
+        })
+        .finally(() => {
+            hideSpinner();
         });
-    document.getElementById('thankYouOverlay').style.display = 'flex';
 }
 
-function uploadFile(file) {
+function uploadFile(file, fileType) {
     const formData = new FormData();
-    formData.append('photo', file);
+    formData.append(fileType, file); // Verwenden Sie den Datei-Typ als Schlüssel
 
-    // MIME-Typ und Dateiname der Datei abrufen
     const mimeType = file.type;
     const fileName = file.name;
 
-    // URL mit MIME-Typ und Dateiname als GET-Parameter zusammenbauen
     const url = `api/upload_file.php?context=${getContext()}&mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
 
     fetch(url, {
         method: 'POST',
         body: formData
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Erfolg:', data);
-            document.getElementById('thankYouOverlay').style.display = 'flex'; // Overlay anzeigen nach Erfolg
+            document.getElementById('thankYouOverlay').style.display = 'flex';
         })
         .catch((error) => {
             console.error('Fehler:', error);
+            alert('Ein Fehler ist aufgetreten: ' + error.message);
+        })
+        .finally(() => {
+            hideSpinner();
         });
 }
 
 function getContext() {
-    return new URLSearchParams( new URL(window.location.href).search).get('context');
+    return new URLSearchParams(new URL(window.location.href).search).get('context');
+}
+
+function showSpinner() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+function hideSpinner() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+function getBrowserLanguage() {
+    return (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
 }

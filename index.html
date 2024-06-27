@@ -20,8 +20,8 @@
     <input type="file" accept="image/*" capture="camera" id="cameraInput" hidden>
     <input type="file" accept="audio/*" capture="microphone" id="audioInput" hidden>
     <button class="modern-btn" id="takePhotoButton"><i class="fas fa-camera"></i> Foto machen</button>
-    <button class="modern-btn" id="recordAudioButton"><i class="fas fa-upload"></i> Audiokommentar aufnehmen</button>
-    <button class="modern-btn" id="writeTextButton"><i class="fas fa-check"></i> Text schreiben</button>
+    <button class="modern-btn" id="recordAudioButton"><i class="fas fa-microphone"></i> Audiokommentar aufnehmen</button>
+    <button class="modern-btn" id="writeTextButton"><i class="fas fa-pencil-alt"></i> Text schreiben</button>
 </main>
 
 <div id="textInputOverlay" class="overlay">
@@ -32,12 +32,20 @@
 </div>
 
 <div id="thankYouOverlay" class="overlay">
-    <button class="modern-btn" id="continueBtn">Danke für deinen Input! Weitermachen?</button>
+    <button class="thank-you-btn" id="continueBtn">Danke für deinen Input! Weitermachen?</button>
 </div>
 
 <footer>
     <a href="https://www.komplexitaeter.de/impressum">Impressum</a> |
     <a href="https://www.komplexitaeter.de/datenschutz">Datenschutz</a>
 </footer>
+
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+</div>
+
+
 </body>
 </html>

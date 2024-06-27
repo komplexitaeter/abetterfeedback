@@ -3,16 +3,17 @@ header('Content-Type: application/json'); // Setzt den Content-Type der Antwort
 
 include '../config.php';
 
+sleep(2);
+
 $host = _MYSQL_HOST;
 $dbname = _MYSQL_DB;
 $username = _MYSQL_USER;
 $password = _MYSQL_PWD;
 $port = _MYSQL_PORT;
 
-$context = substr( filter_input(INPUT_GET, "context", FILTER_SANITIZE_STRING	) ,0,200);
-$mime_type = substr( filter_input(INPUT_GET, "mime_type", FILTER_SANITIZE_STRING	) ,0,100);
-$file_name = substr( filter_input(INPUT_GET, "file_name", FILTER_SANITIZE_STRING	) ,0,200);
-
+$context = substr(filter_input(INPUT_GET, "context", FILTER_SANITIZE_STRING), 0, 200);
+$mime_type = substr(filter_input(INPUT_GET, "mime_type", FILTER_SANITIZE_STRING), 0, 100);
+$file_name = substr(filter_input(INPUT_GET, "file_name", FILTER_SANITIZE_STRING), 0, 200);
 
 // Verbindung zur Datenbank herstellen
 try {
@@ -27,8 +28,12 @@ try {
 }
 
 // Prüfen, ob eine Datei hochgeladen wurde
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['photo']['tmp_name'])) {
-    $file = file_get_contents($_FILES['photo']['tmp_name']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_FILES['photo']['tmp_name']) || !empty($_FILES['audio']['tmp_name']))) {
+    if (!empty($_FILES['photo']['tmp_name'])) {
+        $file = file_get_contents($_FILES['photo']['tmp_name']);
+    } else {
+        $file = file_get_contents($_FILES['audio']['tmp_name']);
+    }
 
     $sql = "INSERT INTO abf_feedback_tbl (context, binary_content, file_name, mime_type) VALUES (:context, :file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
@@ -51,4 +56,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['photo']['tmp_name'])
     http_response_code(400);
     echo json_encode(['error' => 'Keine Datei zum Hochladen erhalten.']);
 }
-
+?>

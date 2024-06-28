@@ -11,7 +11,7 @@ $port = _MYSQL_PORT;
 $slack_token = _SLACK_BOT_TOKEN;
 $slack_channel_id = _SLACK_CHANNEL_ID;
 
-$context = substr(filter_input(INPUT_GET, "context", FILTER_SANITIZE_STRING), 0, 200);
+$context = substr(filter_input(INPUT_GET, "context", FILTER_SANITIZE_SPECIAL_CHARS), 0, 200);
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=$port", $username, $password);
@@ -67,19 +67,18 @@ function handleFileFeedback($pdo, $context) {
 
     $file_name = $file['name'];
     $mime_type = $file['type'];
-    $file_content = file_get_contents($file['tmp_name']);
+    $file_path = $file['tmp_name'];
 
     $sql = "INSERT INTO abf_feedback_tbl (context, binary_content, file_name, mime_type) VALUES (:context, :file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
 
     $stmt->bindParam(':context', $context, PDO::PARAM_STR);
-    $stmt->bindParam(':file', $file_content, PDO::PARAM_LOB);
+    $stmt->bindParam(':file', file_get_contents($file_path), PDO::PARAM_LOB);
     $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
     $stmt->bindParam(':mime_type', $mime_type, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        echo json_encode(['message' => 'Datei erfolgreich gespeichert.']);
-        postFileToSlack($context, $file['tmp_name'], $file_name, $mime_type, $file_type, $slack_token, $slack_channel_id);
+        uploadFileToSlack($slack_token, $slack_channel_id, $file_path, $file_name, $file_type, $context);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern der Datei.']);

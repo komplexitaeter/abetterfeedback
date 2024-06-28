@@ -8,6 +8,7 @@ $dbname = _MYSQL_DB;
 $username = _MYSQL_USER;
 $password = _MYSQL_PWD;
 $port = _MYSQL_PORT;
+$slack_webhook_url = _SLACK_WEBHOOK;
 
 $context = substr(filter_input(INPUT_GET, "context", FILTER_SANITIZE_STRING), 0, 200);
 
@@ -20,10 +21,21 @@ try {
     exit;
 }
 
-// Prüfen, ob Textdaten gesendet wurden
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['text_content'])) {
-    $text_content = $_POST['text_content'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (!empty($_POST['text_content'])) {
+        handleTextFeedback($pdo, $context, $_POST['text_content']);
+    } elseif (!empty($_FILES['photo']['tmp_name']) || !empty($_FILES['audio']['tmp_name'])) {
+        handleFileFeedback($pdo, $context);
+    } else {
+        http_response_code(400);
+        echo json_encode(['error' => 'Keine Datei oder Text zum Hochladen erhalten.']);
+    }
+} else {
+    http_response_code(405);
+    echo json_encode(['error' => 'Methode nicht erlaubt.']);
+}
 
+function handleTextFeedback($pdo, $context, $text_content) {
     $sql = "INSERT INTO abf_feedback_tbl (context, text_content, mime_type) VALUES (:context, :text_content, 'text/plain')";
     $stmt = $pdo->prepare($sql);
 
@@ -37,45 +49,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['text_content'])) {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern des Textes.']);
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_FILES['photo']['tmp_name']) || !empty($_FILES['audio']['tmp_name']))) {
+}
+
+function handleFileFeedback($pdo, $context) {
     if (!empty($_FILES['photo']['tmp_name'])) {
-        $file = file_get_contents($_FILES['photo']['tmp_name']);
+        $file = $_FILES['photo'];
         $file_type = 'photo';
     } else {
-        $file = file_get_contents($_FILES['audio']['tmp_name']);
+        $file = $_FILES['audio'];
         $file_type = 'audio';
     }
 
-    $file_name = substr(filter_input(INPUT_GET, "file_name", FILTER_SANITIZE_STRING), 0, 200);
-    $mime_type = substr(filter_input(INPUT_GET, "mime_type", FILTER_SANITIZE_STRING), 0, 100);
+    $file_name = $file['name'];
+    $mime_type = $file['type'];
+    $file_content = file_get_contents($file['tmp_name']);
 
     $sql = "INSERT INTO abf_feedback_tbl (context, binary_content, file_name, mime_type) VALUES (:context, :file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
 
     $stmt->bindParam(':context', $context, PDO::PARAM_STR);
-    $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
+    $stmt->bindParam(':file', $file_content, PDO::PARAM_LOB);
     $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
     $stmt->bindParam(':mime_type', $mime_type, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
         echo json_encode(['message' => 'Datei erfolgreich gespeichert.']);
-        postFileToSlack($context, $file_name, $mime_type, $file_type);
+        postFileNotificationToSlack($context, $file_name, $file_type);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern der Datei.']);
     }
-} else {
-    http_response_code(400);
-    echo json_encode(['error' => 'Keine Datei oder Text zum Hochladen erhalten.']);
 }
 
 function postTextToSlack($context, $text_content) {
-    $webhook_url = _SLACK_WEBHOOK;
+    global $slack_webhook_url;
     $message = [
         'text' => "Neues Text-Feedback erhalten aus dem Kontext: $context\n*Feedback:* $text_content",
     ];
 
-    $ch = curl_init($webhook_url);
+    $ch = curl_init($slack_webhook_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -84,13 +96,13 @@ function postTextToSlack($context, $text_content) {
     curl_close($ch);
 }
 
-function postFileToSlack($context, $file_name, $mime_type, $file_type) {
-    $webhook_url = _SLACK_WEBHOOK;
+function postFileNotificationToSlack($context, $file_name, $file_type) {
+    global $slack_webhook_url;
     $message = [
-        'text' => "Neues Datei-Feedback erhalten aus dem Kontext: $context\n*Dateiname:* $file_name\n*Mime-Typ:* $mime_type\n*Dateityp:* $file_type",
+        'text' => "Neues $file_type-Feedback erhalten aus dem Kontext: $context\n*Datei:* $file_name",
     ];
 
-    $ch = curl_init($webhook_url);
+    $ch = curl_init($slack_webhook_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_POST, true);

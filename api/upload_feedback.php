@@ -24,9 +24,9 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($_POST['text_content'])) {
-        handleTextFeedback($pdo, $context, $_POST['text_content'], $slack_token, $slack_channel_id);
+        handleTextFeedback($pdo, $context, $_POST['text_content']);
     } elseif (!empty($_FILES['photo']['tmp_name']) || !empty($_FILES['audio']['tmp_name'])) {
-        handleFileFeedback($pdo, $context, $slack_token, $slack_channel_id);
+        handleFileFeedback($pdo, $context);
     } else {
         http_response_code(400);
         echo json_encode(['error' => 'Keine Datei oder Text zum Hochladen erhalten.']);
@@ -36,7 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode(['error' => 'Methode nicht erlaubt.']);
 }
 
-function handleTextFeedback($pdo, $context, $text_content, $slack_token, $slack_channel_id) {
+function handleTextFeedback($pdo, $context, $text_content) {
+    global $slack_token, $slack_channel_id;
+
     $sql = "INSERT INTO abf_feedback_tbl (context, text_content, mime_type) VALUES (:context, :text_content, 'text/plain')";
     $stmt = $pdo->prepare($sql);
 
@@ -45,14 +47,16 @@ function handleTextFeedback($pdo, $context, $text_content, $slack_token, $slack_
 
     if ($stmt->execute()) {
         echo json_encode(['message' => 'Text erfolgreich gespeichert.']);
-        postTextToSlack($slack_token, $slack_channel_id, $context, $text_content);
+        postTextToSlack($context, $text_content);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern des Textes.']);
     }
 }
 
-function handleFileFeedback($pdo, $context, $slack_token, $slack_channel_id) {
+function handleFileFeedback($pdo, $context) {
+    global $slack_token, $slack_channel_id;
+
     if (!empty($_FILES['photo']['tmp_name'])) {
         $file = $_FILES['photo'];
         $file_type = 'photo';
@@ -63,8 +67,7 @@ function handleFileFeedback($pdo, $context, $slack_token, $slack_channel_id) {
 
     $file_name = $file['name'];
     $mime_type = $file['type'];
-    $file_content = file_get_contents($_FILES[$file_type]['tmp_name']);
-    $file_path = $_FILES[$file_type]['tmp_name'];
+    $file_content = file_get_contents($file['tmp_name']);
 
     $sql = "INSERT INTO abf_feedback_tbl (context, binary_content, file_name, mime_type) VALUES (:context, :file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
@@ -75,42 +78,37 @@ function handleFileFeedback($pdo, $context, $slack_token, $slack_channel_id) {
     $stmt->bindParam(':mime_type', $mime_type, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        uploadFileToSlack($slack_token, $slack_channel_id, $file_path, $file_name, $file_type, $context);
+        echo json_encode(['message' => 'Datei erfolgreich gespeichert.']);
+        postFileToSlack($context, $file['tmp_name'], $file_name, $mime_type, $file_type, $slack_token, $slack_channel_id);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern der Datei.']);
     }
 }
 
-function postTextToSlack($token, $channelId, $context, $text_content) {
-    $url = 'https://slack.com/api/chat.postMessage';
-    $data = [
-        'channel' => $channelId,
-        'text' => "Neues Text-Feedback erhalten aus dem Kontext: $context\n*Feedback:* $text_content"
+function postTextToSlack($context, $text_content) {
+    global $slack_token, $slack_channel_id;
+    $message = [
+        'channel' => $slack_channel_id,
+        'text' => "Neues Text-Feedback erhalten aus dem Kontext: $context\n*Feedback:* $text_content",
     ];
-    $headers = [
-        'Authorization: Bearer ' . $token,
-        'Content-Type: application/json'
-    ];
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+    $ch = curl_init('https://slack.com/api/chat.postMessage');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $slack_token,
+        'Content-Type: application/json'
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
     $result = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    error_log("Gesendete Daten an Slack: " . json_encode($data));
-    error_log("HTTP-Statuscode: " . $http_code);
-    error_log("Antwort von Slack: " . $result);
-
-    if ($http_code === 200) {
-        echo json_encode(['message' => 'Text erfolgreich an Slack gesendet.']);
+    $response_data = json_decode($result, true);
+    if (!$response_data['ok']) {
+        error_log('Slack API Fehler beim Senden der Nachricht: ' . ($response_data['error'] ?? 'Unbekannter Fehler'));
     } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Fehler beim Senden des Textes an Slack.']);
+        error_log('Text erfolgreich zu Slack gesendet');
     }
 }
 

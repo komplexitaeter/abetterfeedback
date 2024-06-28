@@ -55,7 +55,10 @@ function uploadText(text) {
     const formData = new FormData();
     formData.append('text_content', text);
 
-    fetch('api/upload_feedback.php?context=' + getContext(), {
+    const url = `api/upload_feedback.php?context=${encodeURIComponent(getContext())}`;
+    console.log("Uploading text to URL: ", url);
+
+    fetch(url, {
         method: 'POST',
         body: formData
     })
@@ -85,7 +88,8 @@ function uploadFile(file, fileType) {
     const mimeType = file.type;
     const fileName = file.name;
 
-    const url = `api/upload_feedback.php?context=${getContext()}&mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
+    const url = `api/upload_feedback.php?context=${encodeURIComponent(getContext())}&mime_type=${encodeURIComponent(mimeType)}&file_name=${encodeURIComponent(fileName)}`;
+    console.log("Uploading file to URL: ", url);
 
     fetch(url, {
         method: 'POST',
@@ -109,6 +113,7 @@ function uploadFile(file, fileType) {
             hideSpinner();
         });
 }
+
 
 function getContext() {
     return new URLSearchParams(new URL(window.location.href).search).get('context');

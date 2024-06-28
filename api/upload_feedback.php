@@ -8,7 +8,8 @@ $dbname = _MYSQL_DB;
 $username = _MYSQL_USER;
 $password = _MYSQL_PWD;
 $port = _MYSQL_PORT;
-$slack_webhook_url = _SLACK_WEBHOOK;
+$slack_token = _SLACK_BOT_TOKEN;
+$slack_channel_id = _SLACK_CHANNEL_ID;
 
 $context = substr(filter_input(INPUT_GET, "context", FILTER_SANITIZE_STRING), 0, 200);
 
@@ -23,9 +24,9 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($_POST['text_content'])) {
-        handleTextFeedback($pdo, $context, $_POST['text_content']);
+        handleTextFeedback($pdo, $context, $_POST['text_content'], $slack_token, $slack_channel_id);
     } elseif (!empty($_FILES['photo']['tmp_name']) || !empty($_FILES['audio']['tmp_name'])) {
-        handleFileFeedback($pdo, $context);
+        handleFileFeedback($pdo, $context, $slack_token, $slack_channel_id);
     } else {
         http_response_code(400);
         echo json_encode(['error' => 'Keine Datei oder Text zum Hochladen erhalten.']);
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode(['error' => 'Methode nicht erlaubt.']);
 }
 
-function handleTextFeedback($pdo, $context, $text_content) {
+function handleTextFeedback($pdo, $context, $text_content, $slack_token, $slack_channel_id) {
     $sql = "INSERT INTO abf_feedback_tbl (context, text_content, mime_type) VALUES (:context, :text_content, 'text/plain')";
     $stmt = $pdo->prepare($sql);
 
@@ -44,14 +45,14 @@ function handleTextFeedback($pdo, $context, $text_content) {
 
     if ($stmt->execute()) {
         echo json_encode(['message' => 'Text erfolgreich gespeichert.']);
-        postTextToSlack($context, $text_content);
+        postTextToSlack($slack_token, $slack_channel_id, $context, $text_content);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern des Textes.']);
     }
 }
 
-function handleFileFeedback($pdo, $context) {
+function handleFileFeedback($pdo, $context, $slack_token, $slack_channel_id) {
     if (!empty($_FILES['photo']['tmp_name'])) {
         $file = $_FILES['photo'];
         $file_type = 'photo';
@@ -62,7 +63,8 @@ function handleFileFeedback($pdo, $context) {
 
     $file_name = $file['name'];
     $mime_type = $file['type'];
-    $file_content = file_get_contents($file['tmp_name']);
+    $file_content = file_get_contents($_FILES[$file_type]['tmp_name']);
+    $file_path = $_FILES[$file_type]['tmp_name'];
 
     $sql = "INSERT INTO abf_feedback_tbl (context, binary_content, file_name, mime_type) VALUES (:context, :file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
@@ -73,40 +75,158 @@ function handleFileFeedback($pdo, $context) {
     $stmt->bindParam(':mime_type', $mime_type, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        echo json_encode(['message' => 'Datei erfolgreich gespeichert.']);
-        postFileNotificationToSlack($context, $file_name, $file_type);
+        uploadFileToSlack($slack_token, $slack_channel_id, $file_path, $file_name, $file_type, $context);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Fehler beim Speichern der Datei.']);
     }
 }
 
-function postTextToSlack($context, $text_content) {
-    global $slack_webhook_url;
-    $message = [
-        'text' => "Neues Text-Feedback erhalten aus dem Kontext: $context\n*Feedback:* $text_content",
+function postTextToSlack($token, $channelId, $context, $text_content) {
+    $url = 'https://slack.com/api/chat.postMessage';
+    $data = [
+        'channel' => $channelId,
+        'text' => "Neues Text-Feedback erhalten aus dem Kontext: $context\n*Feedback:* $text_content"
     ];
-
-    $ch = curl_init($slack_webhook_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    $headers = [
+        'Authorization: Bearer ' . $token,
+        'Content-Type: application/json'
+    ];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
-    curl_exec($ch);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+
+    error_log("Gesendete Daten an Slack: " . json_encode($data));
+    error_log("HTTP-Statuscode: " . $http_code);
+    error_log("Antwort von Slack: " . $result);
+
+    if ($http_code === 200) {
+        echo json_encode(['message' => 'Text erfolgreich an Slack gesendet.']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Fehler beim Senden des Textes an Slack.']);
+    }
 }
 
-function postFileNotificationToSlack($context, $file_name, $file_type) {
-    global $slack_webhook_url;
-    $message = [
-        'text' => "Neues $file_type-Feedback erhalten aus dem Kontext: $context\n*Datei:* $file_name",
-    ];
+function uploadFileToSlack($token, $channelId, $filePath, $filename, $file_type, $context) {
+    $filesize = filesize($filePath);
+    $title = $filename;
+    $initialComment = "Neues $file_type-Feedback erhalten aus dem Kontext: $context";
 
-    $ch = curl_init($slack_webhook_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    try {
+        $uploadUrlResponse = getUploadUrl($token, $filename, $filesize);
+        if (!isset($uploadUrlResponse['upload_url']) || !isset($uploadUrlResponse['file_id'])) {
+            throw new Exception("Failed to get upload URL or file ID: " . json_encode($uploadUrlResponse));
+        }
+
+        $uploadUrl = $uploadUrlResponse['upload_url'];
+        $fileId = $uploadUrlResponse['file_id'];
+
+        $uploadResponse = uploadFileToSlackUrl($uploadUrl, $filePath);
+        if (!$uploadResponse || !isset($uploadResponse['ok']) || $uploadResponse['ok'] !== true) {
+            throw new Exception("File upload failed: " . json_encode($uploadResponse));
+        }
+
+        $completeResponse = completeUpload($token, $fileId, $title, $channelId, $initialComment);
+        if (!isset($completeResponse['ok']) || $completeResponse['ok'] !== true) {
+            throw new Exception("Failed to complete upload: " . json_encode($completeResponse));
+        }
+
+        echo json_encode(['message' => 'Datei erfolgreich zu Slack hochgeladen.']);
+
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['error' => $e->getMessage()]);
+    }
+}
+
+function getUploadUrl($token, $filename, $length) {
+    $url = 'https://slack.com/api/files.getUploadURLExternal';
+    $data = [
+        'filename' => $filename,
+        'length' => $length
+    ];
+    $headers = [
+        'Authorization: Bearer ' . $token,
+        'Content-Type: application/x-www-form-urlencoded'
+    ];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
-    curl_exec($ch);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    if (curl_errno($ch)) {
+        throw new Exception('cURL Error in getUploadUrl: ' . curl_error($ch));
+    }
     curl_close($ch);
+    $decodedResult = json_decode($result, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception("JSON decode error in getUploadUrl: " . json_last_error_msg());
+    }
+    return $decodedResult;
+}
+
+function uploadFileToSlackUrl($uploadUrl, $filePath) {
+    $file = new CURLFile(realpath($filePath), mime_content_type($filePath), basename($filePath));
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, ['file' => $file]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $result = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        throw new Exception('cURL Error in uploadFileToSlack: ' . curl_error($ch));
+    }
+
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if (strpos($result, 'OK') === 0) {
+        return ['ok' => true, 'message' => $result];
+    } else {
+        throw new Exception("Unexpected response from Slack: " . $result);
+    }
+}
+
+function completeUpload($token, $fileId, $title, $channelId = null, $initialComment = null) {
+    $url = 'https://slack.com/api/files.completeUploadExternal';
+    $data = [
+        'files' => json_encode([['id' => $fileId, 'title' => $title]])
+    ];
+    if ($channelId) {
+        $data['channel_id'] = $channelId;
+    }
+    if ($initialComment) {
+        $data['initial_comment'] = $initialComment;
+    }
+    $headers = [
+        'Authorization: Bearer ' . $token,
+        'Content-Type: application/x-www-form-urlencoded'
+    ];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    if (curl_errno($ch)) {
+        throw new Exception('cURL Error in completeUpload: ' . curl_error($ch));
+    }
+    curl_close($ch);
+    $decodedResult = json_decode($result, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception("JSON decode error in completeUpload: " . json_last_error_msg());
+    }
+    return $decodedResult;
 }

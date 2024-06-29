@@ -223,9 +223,8 @@ h1 {
     margin-bottom: 30px;
     width: 30px;
     height: 30px;
-    background-color: red;
+    background-color: grey;
     border-radius: 50%;
-    animation: blinking 1s infinite;
 }
 
 @keyframes blinking {

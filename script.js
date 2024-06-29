@@ -45,7 +45,10 @@ document.getElementById('recordAudioButton').addEventListener('click', () => {
     document.getElementById('audioRecordOverlay').style.display = 'flex';
 });
 
-document.getElementById('startRecordBtn').addEventListener('click', startRecording);
+document.getElementById('startRecordBtn').addEventListener('click', () => {
+    document.getElementById('recordingIndicator').style.visibility = 'visible'; // Show the grey indicator
+    startRecording();
+});
 document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
 document.getElementById('sendAudioBtn').addEventListener('click', sendAudioFeedback);
 document.getElementById('cancelAudioBtn').addEventListener('click', cancelRecording);
@@ -66,11 +69,13 @@ function startRecording() {
 
             document.getElementById('startRecordBtn').style.display = 'none';
             document.getElementById('stopRecordBtn').style.display = 'inline-block';
-            document.getElementById('recordingIndicator').style.visibility = 'visible'; // Show the blinking indicator
+            document.getElementById('recordingIndicator').style.backgroundColor = 'red'; // Change to red
+            document.getElementById('recordingIndicator').style.animation = 'blinking 1s infinite'; // Start blinking
         })
         .catch(function(error) {
             console.error('Error accessing the microphone:', error);
             alert('Fehler beim Zugriff auf das Mikrofon. Bitte überprüfen Sie Ihre Berechtigungen.');
+            document.getElementById('recordingIndicator').style.visibility = 'hidden'; // Hide the indicator on error
         });
 }
 
@@ -82,6 +87,8 @@ function stopRecording() {
             document.getElementById('stopRecordBtn').style.display = 'none';
             document.getElementById('sendAudioBtn').style.display = 'inline-block';
             document.getElementById('recordingIndicator').style.visibility = 'hidden'; // Hide the blinking indicator
+            document.getElementById('recordingIndicator').style.backgroundColor = 'grey'; // Reset to grey
+            document.getElementById('recordingIndicator').style.animation = 'none'; // Stop blinking
         });
     } else {
         console.warn('Recorder is not defined');
@@ -122,6 +129,8 @@ function resetAudioRecording() {
     document.getElementById('stopRecordBtn').style.display = 'none';
     document.getElementById('sendAudioBtn').style.display = 'none';
     document.getElementById('recordingIndicator').style.visibility = 'hidden'; // Ensure indicator is hidden
+    document.getElementById('recordingIndicator').style.backgroundColor = 'grey'; // Reset to grey
+    document.getElementById('recordingIndicator').style.animation = 'none'; // Stop blinking
 }
 
 function stopMediaTracks() {

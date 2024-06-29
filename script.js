@@ -66,6 +66,7 @@ function startRecording() {
 
             document.getElementById('startRecordBtn').style.display = 'none';
             document.getElementById('stopRecordBtn').style.display = 'inline-block';
+            document.getElementById('recordingIndicator').style.visibility = 'visible'; // Show the blinking indicator
         })
         .catch(function(error) {
             console.error('Error accessing the microphone:', error);
@@ -80,6 +81,7 @@ function stopRecording() {
             console.log('Recording stopped');
             document.getElementById('stopRecordBtn').style.display = 'none';
             document.getElementById('sendAudioBtn').style.display = 'inline-block';
+            document.getElementById('recordingIndicator').style.visibility = 'hidden'; // Hide the blinking indicator
         });
     } else {
         console.warn('Recorder is not defined');
@@ -119,6 +121,7 @@ function resetAudioRecording() {
     document.getElementById('startRecordBtn').style.display = 'inline-block';
     document.getElementById('stopRecordBtn').style.display = 'none';
     document.getElementById('sendAudioBtn').style.display = 'none';
+    document.getElementById('recordingIndicator').style.visibility = 'hidden'; // Ensure indicator is hidden
 }
 
 function stopMediaTracks() {

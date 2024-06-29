@@ -216,3 +216,20 @@ h1 {
 #cancelAudioBtn {
     background-color: darkgrey;
 }
+
+/* Blinking recording indicator */
+.blinking {
+    margin-top: -30px;
+    margin-bottom: 30px;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    border-radius: 50%;
+    animation: blinking 1s infinite;
+}
+
+@keyframes blinking {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}

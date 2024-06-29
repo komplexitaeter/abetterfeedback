@@ -68,12 +68,13 @@ function handleFileFeedback($pdo, $context) {
     $file_name = $file['name'];
     $mime_type = $file['type'];
     $file_path = $file['tmp_name'];
+    $file_content = file_get_contents($file_path); // Store file content in a variable
 
     $sql = "INSERT INTO abf_feedback_tbl (context, binary_content, file_name, mime_type) VALUES (:context, :file, :file_name, :mime_type)";
     $stmt = $pdo->prepare($sql);
 
     $stmt->bindParam(':context', $context, PDO::PARAM_STR);
-    $stmt->bindParam(':file', file_get_contents($file_path), PDO::PARAM_LOB);
+    $stmt->bindParam(':file', $file_content, PDO::PARAM_LOB); // Use the variable here
     $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
     $stmt->bindParam(':mime_type', $mime_type, PDO::PARAM_STR);
 

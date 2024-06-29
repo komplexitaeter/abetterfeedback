@@ -1,12 +1,13 @@
-[{
-  "id": "info-header",
-  "en": {
-    "text": "Share your thoughts with us!"
+[
+  {
+    "id": "info-header",
+    "en": {
+      "text": "Share your thoughts with us!"
+    },
+    "de": {
+      "text": "Teile deine Gedanken mit uns!"
+    }
   },
-  "de": {
-    "text": "Teile deine Gedanken mit uns!"
-  }
-},
   {
     "id": "info-txt",
     "en": {
@@ -17,14 +18,14 @@
     }
   },
   {
-  "id": "takePhotoButton",
-  "en": {
-    "innerHTML": "<i class=\"fas fa-camera\"></i> Take Photo"
+    "id": "takePhotoButton",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-camera\"></i> Take Photo"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-camera\"></i> Foto machen"
+    }
   },
-  "de": {
-    "innerHTML": "<i class=\"fas fa-camera\"></i> Foto machen"
-  }
-},
   {
     "id": "recordAudioButton",
     "en": {
@@ -95,6 +96,42 @@
     },
     "de": {
       "value": "Ups. Da ist wohl etwas 'technisch' schief gegangen. Das ärgert uns. Bitte an hallo@komplexitaeter.de eskalieren und wir kümmern uns."
+    }
+  },
+  {
+    "id": "startRecordBtn",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-microphone\"></i> Start Recording"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-microphone\"></i> Aufnahme starten"
+    }
+  },
+  {
+    "id": "stopRecordBtn",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-stop\"></i> Stop Recording"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-stop\"></i> Aufnahme beenden"
+    }
+  },
+  {
+    "id": "sendAudioBtn",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-paper-plane\"></i> Send Audio"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-paper-plane\"></i> Audio senden"
+    }
+  },
+  {
+    "id": "cancelAudioBtn",
+    "en": {
+      "innerHTML": "<i class=\"fas fa-times\"></i> Cancel"
+    },
+    "de": {
+      "innerHTML": "<i class=\"fas fa-times\"></i> Abbrechen"
     }
   }
 ]

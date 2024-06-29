@@ -37,8 +37,7 @@ document.getElementById('cameraInput').onchange = function(event) {
     }
 };
 
-let mediaRecorder;
-let audioChunks = [];
+let recorder;
 let audioStream;
 
 document.getElementById('recordAudioButton').addEventListener('click', () => {
@@ -54,20 +53,21 @@ document.getElementById('cancelAudioBtn').addEventListener('click', cancelRecord
 function startRecording() {
     console.log('Attempting to start recording');
     navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
+        .then(function(stream) {
             console.log('Microphone access granted');
             audioStream = stream;
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-
-            mediaRecorder.addEventListener("dataavailable", event => {
-                audioChunks.push(event.data);
+            recorder = RecordRTC(stream, {
+                type: 'audio',
+                mimeType: 'audio/wav',
+                recorderType: RecordRTC.StereoAudioRecorder,
+                numberOfAudioChannels: 1
             });
+            recorder.startRecording();
 
             document.getElementById('startRecordBtn').style.display = 'none';
             document.getElementById('stopRecordBtn').style.display = 'inline-block';
         })
-        .catch(error => {
+        .catch(function(error) {
             console.error('Error accessing the microphone:', error);
             alert('Fehler beim Zugriff auf das Mikrofon. Bitte überprüfen Sie Ihre Berechtigungen.');
         });
@@ -75,26 +75,32 @@ function startRecording() {
 
 function stopRecording() {
     console.log('Attempting to stop recording');
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-        mediaRecorder.stop();
-        stopMediaTracks();
-        document.getElementById('stopRecordBtn').style.display = 'none';
-        document.getElementById('sendAudioBtn').style.display = 'inline-block';
+    if (recorder) {
+        recorder.stopRecording(function() {
+            console.log('Recording stopped');
+            document.getElementById('stopRecordBtn').style.display = 'none';
+            document.getElementById('sendAudioBtn').style.display = 'inline-block';
+        });
     } else {
-        console.warn('MediaRecorder is inactive or not defined');
+        console.warn('Recorder is not defined');
     }
 }
 
 function sendAudioFeedback() {
     console.log('Sending audio feedback');
-    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-    const file = new File([audioBlob], 'audio_feedback.webm', { type: 'audio/webm' });
-
-    showSpinner();
-    uploadFile(file, 'audio');
-
-    document.getElementById('audioRecordOverlay').style.display = 'none';
-    resetAudioRecording();
+    if (recorder) {
+        recorder.stopRecording(function() {
+            const blob = recorder.getBlob();
+            const file = new File([blob], 'audio_feedback.wav', { type: 'audio/wav' });
+            showSpinner();
+            uploadFile(file, 'audio');
+            document.getElementById('audioRecordOverlay').style.display = 'none';
+            resetAudioRecording();
+        });
+    } else {
+        console.error('No audio data available to send');
+        alert('Es sind keine Audiodaten zum Senden verfügbar. Bitte nehmen Sie erneut auf.');
+    }
 }
 
 function cancelRecording() {
@@ -106,7 +112,10 @@ function cancelRecording() {
 
 function resetAudioRecording() {
     console.log('Resetting audio recording');
-    audioChunks = [];
+    if (recorder) {
+        recorder.reset();
+        recorder = null;
+    }
     document.getElementById('startRecordBtn').style.display = 'inline-block';
     document.getElementById('stopRecordBtn').style.display = 'none';
     document.getElementById('sendAudioBtn').style.display = 'none';
@@ -120,16 +129,6 @@ function stopMediaTracks() {
         });
         audioStream = null;
     }
-    if (mediaRecorder) {
-        if (mediaRecorder.stream) {
-            mediaRecorder.stream.getTracks().forEach(track => {
-                track.stop();
-            });
-            mediaRecorder.stream = null;
-        }
-        mediaRecorder = null;
-    }
-    audioChunks = [];
 }
 
 function uploadText(text) {
@@ -144,6 +143,7 @@ function uploadText(text) {
         body: formData
     })
         .then(response => {
+            console.log('Response status:', response.status);
             if (!response.ok) {
                 throw new Error('Netzwerkantwort war nicht ok');
             }
@@ -177,6 +177,7 @@ function uploadFile(file, fileType) {
         body: formData
     })
         .then(response => {
+            console.log('Response status:', response.status);
             if (!response.ok) {
                 throw new Error('Netzwerkantwort war nicht ok');
             }

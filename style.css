@@ -5,30 +5,30 @@ body, html {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Anpassung der Verteilung */
+    justify-content: space-between;
     align-items: center;
-    font-family: 'Arial', sans-serif; /* Angepasste Schriftart */
-    background-color: #f9f9f9; /* Hellgrauer Hintergrund */
-    color: #333; /* Dunkelgraue Textfarbe */
-    font-size: 1rem; /* Basis-Schriftgröße */
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 1rem;
     text-align: center;
 }
 
 header {
     width: 100%;
     text-align: center;
-    padding: 0.5rem 0; /* Reduziertes Padding */
+    padding: 0.5rem 0;
 }
 
 .logo {
-    max-height: 40px; /* Kleinere Logo-Höhe für kleinere Bildschirme */
+    max-height: 40px;
 }
 
 footer {
     font-size: 0.8rem;
     width: 100%;
     text-align: center;
-    padding: 0.5rem 0; /* Reduziertes Padding */
+    padding: 0.5rem 0;
     background-color: #f9f9f9;
 }
 
@@ -49,80 +49,79 @@ main {
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 600px; /* Maximale Breite für das Hauptinhaltsbereich */
-    padding: 1rem; /* Padding für Abstand */
-    box-sizing: border-box; /* Box-Sizing für Padding und Border */
+    max-width: 600px;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 h1 {
-    font-size: 1.5rem; /* Anpassung der Schriftgröße für Überschriften */
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
-    margin-top: 0; /* Reduziertes Margin oben */
+    margin-top: 0;
     font-weight: bold;
 }
 
 #info-txt {
     width: 90%;
     margin-bottom: 1rem;
-    font-size: 1rem; /* Anpassung der Schriftgröße für Info-Text */
+    font-size: 1rem;
     line-height: 1.5;
 }
 
 .thank-you-btn {
-    background-color: #2196f3; /* Angepasste Hintergrundfarbe (Rosa) */
+    background-color: #2196f3;
     border: none;
-    color: white; /* Weiße Textfarbe */
+    color: white;
     width: 80%;
     height: 8rem;
     text-align: center;
     text-decoration: none;
-    font-size: 1rem; /* Anpassung der Schriftgröße */
+    font-size: 1rem;
     transition: all 0.3s;
     cursor: pointer;
-    border-radius: 1rem; /* Abgerundete Ecken */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
-    font-weight: bold; /* Fettere Schrift */
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
 }
 
 .modern-btn {
-    background-color: #ff4081; /* Angepasste Hintergrundfarbe (Rosa) */
+    background-color: #ff4081;
     border: none;
-    color: white; /* Weiße Textfarbe */
-    padding: 1rem; /* Polsterung */
+    color: white;
+    padding: 1rem;
     text-align: center;
     text-decoration: none;
     display: block;
-    font-size: 1rem; /* Anpassung der Schriftgröße */
-    margin: 0.5rem 0; /* Geringer Rand um jeden Button, oben und unten */
-    width: 100%; /* Button-Breite relativ zum Bildschirm */
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    width: 100%;
     max-width: 600px;
-    height: 4rem; /* Standardhöhe */
+    height: 4rem;
     transition: all 0.3s;
     cursor: pointer;
-    border-radius: 1rem; /* Abgerundete Ecken */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
-    font-weight: bold; /* Fettere Schrift */
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
 }
 
 .modern-btn i {
-    margin-right: 0.5rem; /* Abstand zwischen Icon und Text */
+    margin-right: 0.5rem;
 }
 
 .modern-btn:hover {
-    background-color: #e91e63; /* Dunklerer Hintergrund beim Überfahren (Dunkelrosa) */
+    background-color: #e91e63;
 }
 
-/* Medienabfrage für Hochformat */
 @media (max-width: 600px) and (orientation: portrait) {
     .modern-btn {
-        height: 6rem; /* Erhöhte Höhe im Hochformat (Portrait) */
+        height: 6rem;
     }
+
 }
 
-/* Medienabfrage für Querformat */
 @media (max-height: 600px) and (orientation: landscape) {
     .modern-btn {
-        height: 2.6rem; /* Reduzierte Höhe im Querformat (Landscape) */
+        height: 2.6rem;
         font-size: 0.7rem;
     }
     footer {
@@ -135,11 +134,6 @@ h1 {
 
 #textInputOverlay {
     display: none;
-}
-
-#textInputOverlay .modern-btn {
-    width: 40%;
-    min-height: 0;
 }
 
 #cancelTextBtn {
@@ -155,7 +149,6 @@ h1 {
     width: 100%;
     height: 100%;
 }
-
 
 .overlay {
     display: flex;
@@ -174,18 +167,20 @@ h1 {
     z-index: 2;
     cursor: pointer;
     color: white;
-    padding: 1rem; /* Polsterung für besseren Abstand */
-    font-family: 'Arial', sans-serif; /* Angepasste Schriftart */
+    padding: 1rem;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
 .feedback-text {
-    width: 90%;
+    width: 100%;
+    max-width: 600px;
     height: 35%;
     font-size: 1rem;
     border-radius: 1rem;
     padding: 0.5rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+    margin: 1rem auto;
+    box-sizing: border-box;
 }
 
 .loading-overlay {
@@ -194,7 +189,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* Halbtransparentes weißes Overlay */
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 9998;
     display: flex;
     align-items: center;
@@ -217,7 +212,6 @@ h1 {
     background-color: darkgrey;
 }
 
-/* Blinking recording indicator */
 .blinking {
     margin-top: -30px;
     margin-bottom: 30px;
@@ -231,4 +225,32 @@ h1 {
     0% { opacity: 1; }
     50% { opacity: 0.5; }
     100% { opacity: 1; }
+}
+
+/* Neue Styles für die Problemlösung */
+#textInputOverlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#textInputOverlay .feedback-text {
+    width: 95%;
+    max-width: 600px;
+    margin: 10px auto;
+}
+
+#textInputOverlay .modern-btn,
+#audioRecordOverlay .modern-btn {
+    width: 80%;
+    max-width: 300px;
+    margin: 10px auto;
+}
+
+@media (max-width: 600px) {
+    #textInputOverlay .feedback-text,
+    #textInputOverlay .modern-btn,
+    #audioRecordOverlay .modern-btn {
+        width: 90%;
+    }
 }

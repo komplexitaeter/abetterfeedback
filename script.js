@@ -7,11 +7,14 @@ document.getElementById('takePhotoButton').onclick = function() {
     document.getElementById('cameraInput').click();
 };
 
+document.getElementById('textInputOverlay').style.display = 'none';
+
 document.getElementById('writeTextButton').onclick = function() {
     document.getElementById('textInputOverlay').style.display = 'flex';
     const feedbackTxtArea = document.getElementById("feedbackTxt");
     feedbackTxtArea.focus();
     feedbackTxtArea.select();
+    feedbackTxtArea.setSelectionRange(0, feedbackTxtArea.value.length);
 };
 
 document.getElementById('cancelTextBtn').onclick = function() {

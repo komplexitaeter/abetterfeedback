@@ -8,16 +8,23 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer data-domain="feedback.komplexitaeter.de" src="https://plausible.io/js/script.tagged-events.js"></script>
     <script>
-        (function(w,d,s,o,f,js,fjs){
-            w['PlausibleObject']=o;
-            w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};
-            js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
-            js.src=f;js.async=1;fjs.parentNode.insertBefore(js,fjs)
-        }(window,document,'script','plausible','https://plausible.io/js/plausible.js'));
+        (function() {
+            var plausible = window.plausible || function() { (plausible.q = plausible.q || []).push(arguments) };
+            window.plausible = plausible;
 
-        plausible('pageview', { props: { 'context': new URLSearchParams(window.location.search).get('context') } });
-    </script></head>
+            // Extrahiere den context-Parameter aus der URL
+            var urlParams = new URLSearchParams(window.location.search);
+            var context = urlParams.get('context');
+
+            // Sende das benutzerdefinierte Ereignis an Plausible
+            if (context) {
+                plausible('Pageview with Context', { props: { context: context } });
+            }
+        })();
+    </script>
+</head>
 <body>
 <header>
     <a href="https://www.komplexitaeter.de"><img src="src/logo_big.webp" alt="Komplexitäter Logo" class="logo"></a>
